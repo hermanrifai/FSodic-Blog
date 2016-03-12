@@ -8,9 +8,20 @@ Facebook: www.fb.com/presiden.fajar
 */
 
 
-include ('fajarsodik.php');
+include ('./inc/database.php');
 
-$url = 'http://'.$_SERVER['SERVER_NAME'];
+function permalink($fsbme)
+{
+$link = preg_replace('#([\W]+)#', ' ', $fsbme);
+$link = str_replace(' ', '-', trim($link));
+$link = strtolower($link);
+return $link;
+}
+
+function fsb()
+{
+return 'http://'.$_SERVER['HTTP_HOST'];
+}
 $head = '<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Pemasangan FSB</title><meta name="viewport" content="width=320" /><meta name="viewport" content="initial-scale=1.0" /><meta name="viewport" content="user-scalable=false" /><meta http-equiv="Cache-Control" content="max-age=1" /><meta name="HandheldFriendly" content="True" /><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="stylesheet" href="files/panel.css" type="text/css" media="all,handheld"/><head><div id="fs-header"><h1><a href="http://www.fsodic.com">Pemasangan FSB</a></h1></div><body>';
 $foot = '<div id="fs-footer">Copyright 2012 - '.date('Y',time()+60*60*8).'<br />FSB by <a href="http://www.fsodic.com">Fajar Sodik</a></div></body></html>';
 
@@ -18,9 +29,9 @@ echo $head;
 if(isset($_POST['start']))
 {
 $now = time();
-mysql_query("DROP TABLE IF EXISTS `blogroll`;");
+$fsodic->query("DROP TABLE IF EXISTS `blogroll`;");
 
-mysql_query("CREATE TABLE IF NOT EXISTS `blogroll` (
+$fsodic->query("CREATE TABLE IF NOT EXISTS `blogroll` (
   `idblogroll` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
   `url` varchar(255) NOT NULL,
@@ -29,15 +40,14 @@ mysql_query("CREATE TABLE IF NOT EXISTS `blogroll` (
   PRIMARY KEY (`idblogroll`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2;");
 
-mysql_query("INSERT INTO `blogroll` (`idblogroll`, `name`, `url`, `follow`, `status`) VALUES
-(1, 'Fajar Sodik', 'http://www.fsodic.com', 'dofollow', '0');");
+$fsodic->query("INSERT INTO `blogroll` (`idblogroll`, `name`, `url`, `follow`, `status`) VALUES(1, 'Fajar Sodik', 'http://www.fsodic.com', 'dofollow', '0');");
 
-mysql_query("INSERT INTO `blogroll` (`idblogroll`, `name`, `url`, `follow`, `status`) VALUES
+$fsodic->query("INSERT INTO `blogroll` (`idblogroll`, `name`, `url`, `follow`, `status`) VALUES
 (2, 'BarcaIndonesia.com', 'http://www.barcaindonesia.com', 'dofollow', '1');");
 
-mysql_query("DROP TABLE IF EXISTS `category`;");
+$fsodic->query("DROP TABLE IF EXISTS `category`;");
 
-mysql_query("CREATE TABLE IF NOT EXISTS `category` (
+$fsodic->query("CREATE TABLE IF NOT EXISTS `category` (
   `idcategory` int(10) NOT NULL AUTO_INCREMENT,
   `cname` varchar(50) NOT NULL,
   `clink` varchar(50) NOT NULL,
@@ -45,13 +55,13 @@ mysql_query("CREATE TABLE IF NOT EXISTS `category` (
   PRIMARY KEY (`idcategory`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;");
 
-mysql_query("INSERT INTO `category` (`idcategory`, `cname`, `clink`, `cshow`) VALUES
+$fsodic->query("INSERT INTO `category` (`idcategory`, `cname`, `clink`, `cshow`) VALUES
 (1, 'Lainnya', 'lainnya', '0');");
 
 
-mysql_query("DROP TABLE IF EXISTS `meta`;");
+$fsodic->query("DROP TABLE IF EXISTS `meta`;");
 
-mysql_query("CREATE TABLE IF NOT EXISTS `meta` (
+$fsodic->query("CREATE TABLE IF NOT EXISTS `meta` (
   `idmeta` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `content` varchar(255) NOT NULL,
@@ -59,22 +69,22 @@ mysql_query("CREATE TABLE IF NOT EXISTS `meta` (
   PRIMARY KEY (`idmeta`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;");
 
-mysql_query("INSERT INTO `meta` (`idmeta`, `name`, `content`, `status`) VALUES
+$fsodic->query("INSERT INTO `meta` (`idmeta`, `name`, `content`, `status`) VALUES
 (1, 'generator', 'FSodic Blog', '0');");
 
-mysql_query("DROP TABLE IF EXISTS `navigation`;");
-mysql_query("CREATE TABLE IF NOT EXISTS `navigation` (
+$fsodic->query("DROP TABLE IF EXISTS `navigation`;");
+$fsodic->query("CREATE TABLE IF NOT EXISTS `navigation` (
   `idnavigation` int(10) NOT NULL AUTO_INCREMENT,
   `html` text NOT NULL,
   PRIMARY KEY (`idnavigation`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2;");
 
-mysql_query("INSERT INTO `navigation` (`idnavigation`, `html`) VALUES
+$fsodic->query("INSERT INTO `navigation` (`idnavigation`, `html`) VALUES
 (1, '<p>Selamat datang, navigasi masih kosong. Silahkan edit di panel anda.</p>');");
 
-mysql_query("DROP TABLE IF EXISTS `page`;");
+$fsodic->query("DROP TABLE IF EXISTS `page`;");
 
-mysql_query("CREATE TABLE IF NOT EXISTS `page` (
+$fsodic->query("CREATE TABLE IF NOT EXISTS `page` (
   `idpage` int(10) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
   `content` text NOT NULL,
@@ -84,11 +94,11 @@ mysql_query("CREATE TABLE IF NOT EXISTS `page` (
   PRIMARY KEY (`idpage`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;");
 
-mysql_query("INSERT INTO `page` (`idpage`, `title`, `content`, `permalink`, `status`, `pos`) VALUES
+$fsodic->query("INSERT INTO `page` (`idpage`, `title`, `content`, `permalink`, `status`, `pos`) VALUES
 (1, 'Tentang', '<p>Selamat datang di <a href=\"http://www.fsodic.com\">FSodic Blog</a>, Engine blog buatan anak Indonesia.</p>\r\n\r\n<p>Kami hadir untuk anda dan mulailah blogging dengan CMS anda.</p>\r\n\r\n<p>Jika anda ingin versi premium, silahkan hubungi kami di 085753061028 atau 081256678595. Facebook kami di <a href=\"http://www.facebook.com/presiden.fajar\">sini</a>.</p>', 'tentang', '1', 'top');");
 
-mysql_query("DROP TABLE IF EXISTS `post`;");
-mysql_query("CREATE TABLE IF NOT EXISTS `post` (
+$fsodic->query("DROP TABLE IF EXISTS `post`;");
+$fsodic->query("CREATE TABLE IF NOT EXISTS `post` (
   `idpost` int(10) NOT NULL AUTO_INCREMENT,
   `title` varchar(150) NOT NULL,
   `category` int(10) NOT NULL,
@@ -101,35 +111,40 @@ mysql_query("CREATE TABLE IF NOT EXISTS `post` (
   `status` varchar(2) NOT NULL,
   PRIMARY KEY (`idpost`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;");
-mysql_query("INSERT INTO `post` (`idpost`, `title`, `category`, `user`, `content`, `permalink`, `time`, `total`, `thumbnail`, `status`) VALUES
+$fsodic->query("INSERT INTO `post` (`idpost`, `title`, `category`, `user`, `content`, `permalink`, `time`, `total`, `thumbnail`, `status`) VALUES
 (1, 'Halo Kawan', 1, 1, '<p>Selamat datang sahabatku. Terima kasih telah menggunakan Engine FSodic. Engine ini hanya untuk sobat yang ingin belajar membuat cms blog, silahkan dipelajari dan di edit sesuai selera. Script ini bersifat open source yang artinya semua bebas milik anda dan tanpa menghilangkan inisial pembuatnya.</p>', 'halo-kawan', '$now', 0, '/files/no.png', '1');");
 
-mysql_query("DROP TABLE IF EXISTS `user`;");
-mysql_query("CREATE TABLE IF NOT EXISTS `user` (
+$fsodic->query("DROP TABLE IF EXISTS `user`;");
+$fsodic->query("CREATE TABLE IF NOT EXISTS `user` (
   `iduser` int(3) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
   `password` varchar(32) NOT NULL,
   `email` varchar(150) NOT NULL,
   `fullname` varchar(20) NOT NULL,
+		`log_session` varchar(32) NOT NULL,
   PRIMARY KEY (`iduser`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;");
+
+
 $username = trim(permalink($_POST['username']));
 $password = trim(strip_tags($_POST['password']));
 $fullname = trim(strip_tags($_POST['fullname']));
 $email = trim(strip_tags($_POST['email']));
-mysql_query("INSERT INTO `user` (`iduser`, `username`, `password`, `email`, `fullname`) VALUES
-('1', '$username', '$password', '$email', '$fullname');");
-header ('Location: /');
+$log_session = md5($username.'-'.$password.'-1');
+$fsodic->query("INSERT INTO `user` (`iduser`, `username`, `password`, `email`, `fullname`, `log_session`) VALUES('1', '$username', '$password', '$email', '$fullname', '$log_session.');");
+
 rename('./install.php', 'ce-install.php');
+header ('Location: /panel.php');
 }
 else
 {
-echo '<div id="fs-content">
+echo '
+<div id="fs-content">
 <p>Selamat datang,<br />
 Terima kasih telah menggunakan CMS FSB kami. CMS ini kami tujukan untuk proses belajar dan tidak untuk diperjual belikan. CMS ini kami bagikan secara Free di <a href="http://www.fsodic.com/" rel="dofollow">www.fsodic.com</a> dan pastikan sobat mendapatkan file asli dari situs kami.</p>
 
 <p>Kami meminta anda tidak menghapus komentar pada setiap file yang mencantumkan inisial pembuat CMS dan kami juga tidak mengharapkan anda menghapus teks <b>FSB by Fajar Sodik</b> di bagian footer.</p>
-<form action ="'.$url.'/install.php" method="POST">
+<form action ="'.fsb('url').'/install.php" method="POST">
 <h4>Nama Pengguna</h4>
 <input type="text" name="username" class="fs-text">
 <li class="fs-war">Nama pengguna anda hanya diperbolehkan a-z, 0-9 dan tanda "-"</li>
