@@ -58,14 +58,14 @@ if(isset($_POST['login']))
 {
 $log = $_POST['log'];
 $pw = md5($_POST['password']);
-$user = mysql_num_rows(mysql_query("SELECT * FROM user WHERE email = '$log' OR username = '$log'"));
+$user = mysql_num_rows(mysql_query("SELECT * FROM user WHERE email = '".mysql_real_escae_string($log)."' OR username = '".mysql_real_escae_string($log)."'"));
 if($user = 0)
 {
 $not = '<li class="fs-err">Email atau Nama Pengguna tidak ada</li>';
 }
 else
 {
-$match = mysql_fetch_array(mysql_query("SELECT * FROM user WHERE username = '$log' OR email = '$log'"));
+$match = mysql_fetch_array(mysql_query("SELECT * FROM user WHERE username = '".mysql_real_escae_string($log)."' OR email = '".mysql_real_escae_string($log)."'"));
 $pw2 = md5( $match['password']);
 if($pw == $pw2)
 {
