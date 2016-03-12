@@ -15,7 +15,10 @@ Change configuration in file of "database.php".
 After it, open /install.php and input your login data.
 
 ----------------------------------------------------------------------------------
-Salam Hangat
+my@fsodic.com
+----------------------------------------------------------------------------------
+
+Salam Hangat,
 
 
 
