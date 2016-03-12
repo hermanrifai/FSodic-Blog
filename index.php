@@ -7,7 +7,7 @@ Blog: www.fsodic.com
 Facebook: www.fb.com/presiden.fajar
 */
 
-include ('fajarsodik.php');
+include ('./fajarsodik.php');
 
 $fs = isset($_GET['fs']) ? trim($_GET['fs']) :'';
 switch ($fs)
