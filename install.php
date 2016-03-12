@@ -7,6 +7,7 @@ Blog: www.fsodic.com
 Facebook: www.fb.com/presiden.fajar
 */
 
+
 include ('fajarsodik.php');
 
 $url = 'http://'.$_SERVER['SERVER_NAME'];
